@@ -6,6 +6,8 @@ services:
         build:
             context: .
             dockerfile: ./docker/web/Dockerfile
+        volumes:
+            - ./cli_api:/app/cli_api
         env_file:
             - ./.env
         ports:
@@ -18,10 +20,10 @@ services:
         env_file:
             - ./.env
         volumes:
-            - portfolio-site-db:/var/lib/postgresql/data
+            - cli-api-db:/var/lib/postgresql/data
             - ./docker/postgresql/init_scripts:/docker-entrypoint-intdb.d
         ports:
             - "5432:5432"
 
 volumes:
-    portfolio-site-db:
+    cli-api-db:

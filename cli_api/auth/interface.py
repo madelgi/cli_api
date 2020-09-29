@@ -1,6 +1,5 @@
 """
 Interface for models interacting with scripts.
-
 """
 from typing import TypedDict
 

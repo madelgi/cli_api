@@ -6,6 +6,7 @@ import jwt
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
 
 from cli_api.extensions import db, bcrypt
+from cli_api.common.errors import UserException
 
 
 class User(db.Model):
@@ -28,7 +29,7 @@ class User(db.Model):
 
     def __init__(self, email, password, admin=False):
         self.email = email
-        self.password = bcrypt.generate_password_hash(password, flask.current_app.config.get('BCRYPT_LOG_ROUNDS'))
+        self.password = bcrypt.generate_password_hash(password, flask.current_app.config.get('BCRYPT_LOG_ROUNDS')).decode('utf-8')
         self.registered_on = datetime.datetime.now()
         self.admin = admin
 
@@ -38,7 +39,7 @@ class User(db.Model):
         """
         try:
             payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=60*30),
                 'iat': datetime.datetime.utcnow(),
                 'sub': user_id
             }
@@ -53,12 +54,12 @@ class User(db.Model):
         Decodes an auth token.
         """
         try:
-            payload = jwt.decode(auth_token, os.getenv('SECRET_KEY'), algorithms=['HS256'])
+            payload = jwt.decode(auth_token, flask.current_app.config.get('SECRET_KEY'), algorithms=['HS256'])
             return payload['sub']
         except jwt.ExpiredSignature:
-            return 'Signature expired, please log in again'
+            raise UserException('Signature expired, please log in again', status_code=403)
         except jwt.InvalidTokenError:
-            return 'Invalid token, please log in again'
+            raise UserException('Invalid token, please log in again', status_code=403)
 
 
 class TokenBlacklist(db.Model):

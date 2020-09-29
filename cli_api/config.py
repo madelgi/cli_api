@@ -27,14 +27,16 @@ class Config:
 
 
 class ProductionConfig(Config):
-    SQLALCHEMY_URL = f'postgresql://{Config.DB_USER}:{Config.DB_PASSWORD}@{Config.DB_HOST}:{Config.DB_PORT}/{Config.DB_NAME}'
+    SQLALCHEMY_DATABASE_URI = f'postgresql://{Config.DB_USER}:{Config.DB_PASSWORD}@{Config.DB_HOST}:{Config.DB_PORT}/{Config.DB_NAME}'
 
 
 class DevelopmentConfig(Config):
-    SQLALCHEMY_URL = f'postgresql://{Config.DB_USER}:{Config.DB_PASSWORD}@{Config.DB_HOST}:{Config.DB_PORT}/{Config.DB_NAME}'
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = f'postgresql://{Config.DB_USER}:{Config.DB_PASSWORD}@{Config.DB_HOST}:{Config.DB_PORT}/{Config.DB_NAME}'
 
 
 class TestConfig(Config):
+    TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///cli_api.db"
 
 

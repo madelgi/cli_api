@@ -15,5 +15,5 @@ COPY . /app
 # Add source to path
 ENV PYTHONPATH="${PYTHONPATH}:/app/cli_api"
 
-ENTRYPOINT [ "python" ]
-CMD [ "app.py" ]
+RUN chmod +x ./bin/entrypoint.sh
+ENTRYPOINT [ "./bin/entrypoint.sh" ]

@@ -5,70 +5,65 @@ from .interface import UserInterface
 from .model import User, TokenBlacklist
 
 from cli_api.extensions import db, bcrypt
+from cli_api.common.errors import ServerException, UserException
 
 
 class UserService:
 
     @staticmethod
-    def register_user(user_obj: UserInterface):
+    def register_user(user_obj: UserInterface) -> User:
         """
         Register a user.
         """
-        user = User(
-            email=user_obj['email'],
-            password=user_obj['password']
-        )
+        try:
+            user = User(
+                email=user_obj['email'],
+                password=user_obj['password']
+            )
 
-        db.session.add(user)
-        db.session.commit()
+            db.session.add(user)
+            db.session.commit()
 
-        return user
+            return user
+        except Exception:
+            raise ServerException("Unable to register user")
 
     @staticmethod
-    def login_user(user_obj: UserInterface):
+    def login_user(user_obj: UserInterface) -> str:
         """
         Login an already-registered user.
+
+        :return: An authorization token
         """
         email = user_obj['email']
         password = user_obj['password']
-
         user = User.query.filter_by(email=email).first()
 
         # No user registered under given email
         if not user:
-            response_object = {
-                "ok": False,
-                "message": f"Unable to find user with email '{email}'"
-            }
-
-            return response_object, 400
+            raise UserException(f"Unable to find user with email '{email}'", status_code=404)
 
         check_password = bcrypt.check_password_hash(user.password, password)
         if not check_password:
-            response_object = {
-                "ok": False,
-                "message": f"Invalid password for user with email '{email}'"
-            }
-
-            return response_object, 400
+            raise UserException(f"Invalid password for user with email '{email}'", status_code=403)
 
         try:
             auth_token = user.encode_auth_token(user.id)
             if auth_token:
-                response_object = {
-                    "ok": True,
-                    "message": "Successfully logged in",
-                    "auth_token": auth_token
-                }
-
-                return response_object, 200
+                return auth_token
         except Exception:
-            response_object = {
-                "ok": False,
-                "message": "Unable to generate login token, please try again"
-            }
+            raise ServerException("Unable to generate login token, please try again")
 
-            return response_object, 500
+    @staticmethod
+    def logout_user(auth_token: str):
+        """
+        Logout user with given token.
+
+        :param auth_token: Authorization token.
+        """
+        User.decode_auth_token(auth_token)
+        TokenBlacklistService.add_to_blacklist(auth_token)
+
 
 
 class TokenBlacklistService:
@@ -78,6 +73,9 @@ class TokenBlacklistService:
 
     @staticmethod
     def add_to_blacklist(token: str):
-        blacklist_token = TokenBlacklist(token)
-        db.session.add(blacklist_token)
-        db.session.commit()
+        try:
+            blacklist_token = TokenBlacklist(token)
+            db.session.add(blacklist_token)
+            db.session.commit()
+        except Exception:
+            raise ServerException("Unable to blacklist given token")
