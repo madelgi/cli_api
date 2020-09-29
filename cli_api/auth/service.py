@@ -9,17 +9,13 @@ from cli_api.common.errors import ServerException, UserException
 
 
 class UserService:
-
     @staticmethod
     def register_user(user_obj: UserInterface) -> User:
         """
         Register a user.
         """
         try:
-            user = User(
-                email=user_obj['email'],
-                password=user_obj['password']
-            )
+            user = User(email=user_obj["email"], password=user_obj["password"])
 
             db.session.add(user)
             db.session.commit()
@@ -35,17 +31,21 @@ class UserService:
 
         :return: An authorization token
         """
-        email = user_obj['email']
-        password = user_obj['password']
+        email = user_obj["email"]
+        password = user_obj["password"]
         user = User.query.filter_by(email=email).first()
 
         # No user registered under given email
         if not user:
-            raise UserException(f"Unable to find user with email '{email}'", status_code=404)
+            raise UserException(
+                f"Unable to find user with email '{email}'", status_code=404
+            )
 
         check_password = bcrypt.check_password_hash(user.password, password)
         if not check_password:
-            raise UserException(f"Invalid password for user with email '{email}'", status_code=403)
+            raise UserException(
+                f"Invalid password for user with email '{email}'", status_code=403
+            )
 
         try:
             auth_token = user.encode_auth_token(user.id)
@@ -63,7 +63,6 @@ class UserService:
         """
         User.decode_auth_token(auth_token)
         TokenBlacklistService.add_to_blacklist(auth_token)
-
 
 
 class TokenBlacklistService:

@@ -19,7 +19,8 @@ class User(db.Model):
     :param registered_on: Date of user registration
     :param admin: Boolean flag representing whether the user is an admin or not
     """
-    __tablename__ = 'users'
+
+    __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     email = Column(String(256), unique=True, nullable=False)
@@ -29,7 +30,9 @@ class User(db.Model):
 
     def __init__(self, email, password, admin=False):
         self.email = email
-        self.password = bcrypt.generate_password_hash(password, flask.current_app.config.get('BCRYPT_LOG_ROUNDS')).decode('utf-8')
+        self.password = bcrypt.generate_password_hash(
+            password, flask.current_app.config.get("BCRYPT_LOG_ROUNDS")
+        ).decode("utf-8")
         self.registered_on = datetime.datetime.now()
         self.admin = admin
 
@@ -39,12 +42,15 @@ class User(db.Model):
         """
         try:
             payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=60*30),
-                'iat': datetime.datetime.utcnow(),
-                'sub': user_id
+                "exp": datetime.datetime.utcnow()
+                + datetime.timedelta(days=0, seconds=60 * 30),
+                "iat": datetime.datetime.utcnow(),
+                "sub": user_id,
             }
 
-            return jwt.encode(payload, flask.current_app.config.get('SECRET_KEY'), algorithm='HS256')
+            return jwt.encode(
+                payload, flask.current_app.config.get("SECRET_KEY"), algorithm="HS256"
+            )
         except Exception as e:
             return e
 
@@ -54,12 +60,18 @@ class User(db.Model):
         Decodes an auth token.
         """
         try:
-            payload = jwt.decode(auth_token, flask.current_app.config.get('SECRET_KEY'), algorithms=['HS256'])
-            return payload['sub']
+            payload = jwt.decode(
+                auth_token,
+                flask.current_app.config.get("SECRET_KEY"),
+                algorithms=["HS256"],
+            )
+            return payload["sub"]
         except jwt.ExpiredSignature:
-            raise UserException('Signature expired, please log in again', status_code=403)
+            raise UserException(
+                "Signature expired, please log in again", status_code=403
+            )
         except jwt.InvalidTokenError:
-            raise UserException('Invalid token, please log in again', status_code=403)
+            raise UserException("Invalid token, please log in again", status_code=403)
 
 
 class TokenBlacklist(db.Model):
@@ -70,6 +82,7 @@ class TokenBlacklist(db.Model):
     :param token: JWT token string
     :param blacklisted_on: Date that the token was blacklisted
     """
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     token = Column(String(512), unique=True, nullable=False)
     blacklisted_on = Column(DateTime, nullable=False)

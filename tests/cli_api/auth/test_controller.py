@@ -7,26 +7,20 @@ from cli_api.auth.service import UserService
 @patch.object(UserService, "register_user", lambda register_req: User(**register_req))
 def test_register_user_success(app):
     with app.test_client() as client:
-        payload = {
-            'email': 'max@gmail.com',
-            'password': 'abc123'
-        }
+        payload = {"email": "max@gmail.com", "password": "abc123"}
 
         result = client.post("/auth/register", json=payload)
         assert result.status_code == 201
 
         result_json = result.get_json()
-        assert result_json['email'] == 'max@gmail.com'
-        assert result_json['registered_on']
+        assert result_json["email"] == "max@gmail.com"
+        assert result_json["registered_on"]
 
 
 @patch.object(UserService, "login_user", lambda register_req: "token123")
 def test_login_success(app):
     with app.test_client() as client:
-        payload = {
-            'email': 'max@gmail.com',
-            'password': 'abc123'
-        }
+        payload = {"email": "max@gmail.com", "password": "abc123"}
 
         result = client.post("/auth/login", json=payload)
         assert result.status_code == 200
@@ -47,7 +41,7 @@ def test_logout_no_token(app):
 @patch.object(UserService, "logout_user", lambda _: None)
 def test_logout_success(app):
     with app.test_client() as client:
-        headers = {'Authorization': 'Bearer abc123'}
+        headers = {"Authorization": "Bearer abc123"}
         result = client.post("/auth/logout", headers=headers)
 
         assert result.status_code == 200

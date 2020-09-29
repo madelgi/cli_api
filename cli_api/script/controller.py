@@ -3,15 +3,14 @@ from flask_restx import Namespace, Resource
 
 
 api = Namespace(
-    'Script',
-    description='Endpoint for adding, modifying, deleting various scripts',
-    path='/scripts'
+    "Script",
+    description="Endpoint for adding, modifying, deleting various scripts",
+    path="/scripts",
 )
 
 
-@api.route('/')
+@api.route("/")
 class ScriptResource(Resource):
-
     def get(self):
         pass
 
