@@ -8,6 +8,7 @@ from flask_restx import Namespace, Resource
 from .schema import user_post, user_get
 from .service import UserService
 from cli_api.common.errors import UserException
+from cli_api.common.utils import get_bearer_token
 
 
 api = Namespace(
@@ -44,10 +45,6 @@ class LoginResource(Resource):
 @api.route("/logout")
 class LogoutResource(Resource):
     def post(self):
-        auth_header = request.headers.get("Authorization")
-        if not auth_header:
-            raise UserException("Invalid authorization token", status_code=403)
-
-        auth_token = auth_header.split(" ")[1]
+        auth_token = get_bearer_token()
         UserService.logout_user(auth_token)
         return {"message": "Successfully logged out", "auth_token": auth_token}, 200

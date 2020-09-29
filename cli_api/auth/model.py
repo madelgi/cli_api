@@ -55,9 +55,12 @@ class User(db.Model):
             return e
 
     @staticmethod
-    def decode_auth_token(auth_token: str):
+    def decode_auth_token(auth_token: str) -> int:
         """
-        Decodes an auth token.
+        Decode an auth token.
+
+        :param auth_token: An auth token.
+        :returns: A user ID.
         """
         try:
             payload = jwt.decode(

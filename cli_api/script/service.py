@@ -8,14 +8,14 @@ from .interface import ScriptInterface
 
 class ScriptService:
     @staticmethod
-    def get_all_by_user(user: str) -> typing.Iterable[Script]:
+    def get_all_by_user(user_id: int) -> typing.Iterable[Script]:
         """
         Return a script by user/script name.
 
         :param user: The user that registered the script.
         :param name: Name of the script.
         """
-        return Script.query.filter_by(user=user).all()
+        return Script.query.filter_by(user=user_id).all()
 
     @staticmethod
     def get_script_by_user_and_name(user: str, name: str) -> typing.Iterable[Script]:
@@ -40,7 +40,7 @@ class ScriptService:
         )
         existing_scripts = sorted(existing_scripts, key=lambda x: x.version)
         if existing_scripts:
-            version = existing_scripts[0].version + 1
+            version = existing_scripts[-1].version + 1
         else:
             version = 1
 
@@ -48,3 +48,5 @@ class ScriptService:
 
         db.session.add(new_script)
         db.session.commit()
+
+        return new_script
