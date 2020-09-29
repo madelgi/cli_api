@@ -1,12 +1,15 @@
 import typing
 
-from cli_api.extensions import db
+import docker
 
+from cli_api.common.errors import UserException
+from cli_api.extensions import db
 from .model import Script
 from .interface import ScriptInterface
 
 
 class ScriptService:
+
     @staticmethod
     def get_all_by_user(user_id: int) -> typing.Iterable[Script]:
         """
@@ -18,12 +21,32 @@ class ScriptService:
         return Script.query.filter_by(user=user_id).all()
 
     @staticmethod
-    def get_script_by_user_and_name(user: str, name: str) -> typing.Iterable[Script]:
+    def get_script_by_user_and_name(user_id: int, name: str, version: int = None) -> Script:
         """
-        Get specific script from user. Can return multiple scripts if
-        the user has uploaded multiple versions of the same script.
+        Get specific script from user.
+
+        :param user_id: The user's id.
+        :param name: The script name.
+        :param version: The script version.
+        :returns: A script. If no version is specified, returns the most recent version
         """
-        return Script.query.filter_by(user=user, name=name).all()
+        scripts = Script.query.filter_by(user=user_id, name=name).all()
+
+        # Raise error if there's no script
+        if not scripts:
+            raise UserException(f"Unable to find script `{name}`.", status_code=404)
+
+        if version:
+            for script in scripts:
+                if script.version == version:
+                    return script
+            else:
+                raise UserException(f"Unable to find version {version} of `{name}`", status_code=404)
+
+        else:
+            # If no version is specified,
+            scripts = sorted(scripts, key=lambda x: x.version)
+            return scripts[-1]
 
     @staticmethod
     def create(new_obj: ScriptInterface) -> None:
@@ -35,13 +58,10 @@ class ScriptService:
         content = new_obj["content"]
 
         # Check if already exists
-        existing_scripts = ScriptService.get_script_by_user_and_name(
-            user=user, name=name
-        )
-        existing_scripts = sorted(existing_scripts, key=lambda x: x.version)
-        if existing_scripts:
-            version = existing_scripts[-1].version + 1
-        else:
+        try:
+            script = ScriptService.get_script_by_user_and_name(user, name)
+            version = script.version + 1
+        except UserException:
             version = 1
 
         new_script = Script(name=name, user=user, version=version, content=content)
@@ -50,3 +70,12 @@ class ScriptService:
         db.session.commit()
 
         return new_script
+
+    @staticmethod
+    def execute(user_id: int, name: str, version: int = None):
+        """
+        Execute a given script.
+        """
+        script = ScriptService.get_script_by_user_and_name(user_id, name, version=version)
+        client = docker.from_env()
+        client.containers.run("alpine", command=script.content, detach=True, remove=True)

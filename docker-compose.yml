@@ -8,6 +8,9 @@ services:
             dockerfile: ./docker/web/Dockerfile
         volumes:
             - ./cli_api:/app/cli_api
+            - ./tests:/app/tests
+            # Allows launching of sibling containers
+            - /var/run/docker.sock:/var/run/docker.sock
         env_file:
             - ./.env
         ports:

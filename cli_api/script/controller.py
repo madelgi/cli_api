@@ -42,3 +42,11 @@ class ScriptResource(Resource):
         script_obj["user"] = user_id
 
         return ScriptService.create(script_obj)
+
+
+@api.route("/<string:script_name>/execute")
+class ScriptExecuteResource(Resource):
+    def post(self, script_name: int):
+        auth_token = get_bearer_token()
+        user_id = User.decode_auth_token(auth_token)
+        return ScriptService.execute(user_id, script_name)

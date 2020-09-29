@@ -24,11 +24,13 @@ def test_get_by_user(db: SQLAlchemy):
     db.session.add(script2)
     db.session.commit()
 
-    results = ScriptService.get_script_by_user_and_name(user=1, name="script_1")
+    # Default, get most recent
+    result = ScriptService.get_script_by_user_and_name(1, "script_1")
+    assert script2 == result
 
-    assert len(results) == 2
-    assert script1 in results
-    assert script2 in results
+    # Get earlier version
+    result = ScriptService.get_script_by_user_and_name(1, "script_1", version=1)
+    assert script1 == result
 
 
 def test_create(db: SQLAlchemy):
@@ -59,3 +61,4 @@ def test_create(db: SQLAlchemy):
     # Check versioning
     assert results[0].version == 1
     assert results[1].version == 2
+
