@@ -1,3 +1,6 @@
+"""
+Resources for the /scripts endpoint
+"""
 from flask import request
 from flask_restx import Namespace, Resource
 from flask_accepts import accepts, responds
@@ -17,8 +20,7 @@ api = Namespace(
 
 @api.route("")
 class ScriptResource(Resource):
-
-    @responds(schema=script_get, api=api, status_code=201)
+    @responds(schema=script_get, api=api, status_code=200)
     def get(self):
         """
         Get all scripts.
@@ -37,6 +39,6 @@ class ScriptResource(Resource):
 
         user_id = User.decode_auth_token(auth_token)
         script_obj = request.parsed_obj
-        script_obj['user'] = user_id
+        script_obj["user"] = user_id
 
         return ScriptService.create(script_obj)

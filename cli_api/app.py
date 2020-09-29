@@ -20,6 +20,9 @@ def create_app(config_name: str):
     # Register error handlers
     register_error_handlers(app)
 
+    # Register commands
+    register_commands(app)
+
     # Add extensions
     db.init_app(app)
     bcrypt.init_app(app)
@@ -35,6 +38,12 @@ def register_routes(app):
     api = Api(app, title="CLI API", version="0.1.0")
     api.add_namespace(script_api)
     api.add_namespace(auth_api)
+
+
+def register_commands(app: Flask):
+    from .commands import seed_db
+
+    app.cli.add_command(seed_db)
 
 
 def register_error_handlers(app: Flask):

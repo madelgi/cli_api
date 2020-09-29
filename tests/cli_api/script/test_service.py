@@ -5,8 +5,8 @@ from cli_api.script.service import ScriptService
 
 
 def test_get_all_by_user(db: SQLAlchemy):
-    script1 = Script(name="script_1", user=1, version=1, content="echo \"HELLO\"")
-    script2 = Script(name="script_2", user=1, version=1, content="echo \"HELLO\"")
+    script1 = Script(name="script_1", user=1, version=1, content='echo "HELLO"')
+    script2 = Script(name="script_2", user=1, version=1, content='echo "HELLO"')
     db.session.add(script1)
     db.session.add(script2)
     db.session.commit()
@@ -18,8 +18,8 @@ def test_get_all_by_user(db: SQLAlchemy):
 
 
 def test_get_by_user(db: SQLAlchemy):
-    script1 = Script(name="script_1", user=1, version=1, content="echo \"HELLO\"")
-    script2 = Script(name="script_1", user=1, version=2, content="echo \"HELLO\"")
+    script1 = Script(name="script_1", user=1, version=1, content='echo "HELLO"')
+    script2 = Script(name="script_1", user=1, version=2, content='echo "HELLO"')
     db.session.add(script1)
     db.session.add(script2)
     db.session.commit()

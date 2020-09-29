@@ -9,5 +9,5 @@ class ScriptSchema(Schema):
     version = fields.Integer(attribute="version")
 
 
-script_post = ScriptSchema(only=['name', 'content'])
+script_post = ScriptSchema(only=["name", "content"])
 script_get = ScriptSchema()

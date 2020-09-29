@@ -20,10 +20,11 @@ services:
         env_file:
             - ./.env
         volumes:
-            - cli-api-db:/var/lib/postgresql/data
+            # - cli-api-db:/var/lib/postgresql/data
             - ./docker/postgresql/init_scripts:/docker-entrypoint-intdb.d
         ports:
             - "5432:5432"
 
-volumes:
-    cli-api-db:
+# Note: for now, recreate DB on build
+# volumes:
+#     cli-api-db:

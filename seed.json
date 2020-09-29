@@ -1,0 +1,15 @@
+{
+    "users": [
+        {
+            "email": "max@gmail.com", "password": "abc", "admin": true
+        },
+        {
+            "email": "jack@yahoo.com", "password": "xyz", "admin": false
+        }
+    ],
+    "scripts": [
+        {
+            "user": 1, "name": "echo_test", "content": "echo \"HELLO\""
+        }
+    ]
+}

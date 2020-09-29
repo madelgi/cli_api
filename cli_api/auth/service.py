@@ -15,7 +15,11 @@ class UserService:
         Register a user.
         """
         try:
-            user = User(email=user_obj["email"], password=user_obj["password"])
+            user = User(
+                email=user_obj["email"],
+                password=user_obj["password"],
+                admin=user_obj["admin"],
+            )
 
             db.session.add(user)
             db.session.commit()
