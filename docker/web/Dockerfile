@@ -16,5 +16,4 @@ COPY . /app
 ENV PYTHONPATH="${PYTHONPATH}:/app/cli_api"
 
 RUN chmod +x ./bin/entrypoint.sh
-RUN chmod +x ./bin/migrate.sh
 ENTRYPOINT [ "./bin/entrypoint.sh" ]

@@ -17,7 +17,7 @@ def test_register_user_success(app):
         assert result_json["registered_on"]
 
 
-@patch.object(UserService, "login_user", lambda register_req: "token123")
+@patch.object(UserService, "login_user", lambda register_req: b"token123")
 def test_login_success(app):
     with app.test_client() as client:
         payload = {"email": "max@gmail.com", "password": "abc123"}
@@ -35,7 +35,7 @@ def test_logout_no_token(app):
         result = client.post("/auth/logout")
         assert result.status_code == 403
 
-        assert result.get_json()["message"] == "Invalid authorization token"
+        assert result.get_json()["message"] == "Missing authorization token"
 
 
 @patch.object(UserService, "logout_user", lambda _: None)

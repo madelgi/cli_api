@@ -29,7 +29,7 @@ class UserService:
             raise ServerException("Unable to register user")
 
     @staticmethod
-    def login_user(user_obj: UserInterface) -> str:
+    def login_user(user_obj: UserInterface):
         """
         Login an already-registered user.
 
