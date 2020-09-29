@@ -28,13 +28,13 @@ To run tests, you must have the development container already running. If you do
 first. After this, you can execute the following to run the test suite:
 
 ```bash
-$ make test
+$ make pytest
 ```
 
 If you would like to run a specific test, or subset of tests, pass the location to the `test_loc`
 argument:
 
 ```bash
-$ make test test_loc=tests/script/test_controller.py
+$ make pytest test_loc=tests/script/test_controller.py
 ```
 
