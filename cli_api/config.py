@@ -25,6 +25,10 @@ class Config:
     DB_HOST = os.getenv("POSTGRES_HOST")
     DB_PORT = os.getenv("POSTGRES_PORT")
 
+    # Redis/RQ config
+    REDIS_URL = f"redis://{os.getenv('REDIS_HOST')}:{os.getenv('REDIS_PORT')}/{os.getenv('REDIS_DB')}"
+    RQ_REDIS_URL = REDIS_URL
+
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = f"postgresql://{Config.DB_USER}:{Config.DB_PASSWORD}@{Config.DB_HOST}:{Config.DB_PORT}/{Config.DB_NAME}"

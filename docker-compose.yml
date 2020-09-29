@@ -3,6 +3,7 @@ services:
     web:
         depends_on:
             - postgres
+            - redis
         build:
             context: .
             dockerfile: ./docker/web/Dockerfile
@@ -23,11 +24,15 @@ services:
         env_file:
             - ./.env
         volumes:
-            # - cli-api-db:/var/lib/postgresql/data
             - ./docker/postgresql/init_scripts:/docker-entrypoint-intdb.d
         ports:
             - "5432:5432"
 
-# Note: for now, recreate DB on build
-# volumes:
-#     cli-api-db:
+    redis:
+        env_file:
+            - ./.env
+        image: redis:latest
+        restart: unless-stopped
+        stop_grace_period: 3s
+        ports:
+            - "6379:6379"

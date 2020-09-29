@@ -2,10 +2,11 @@ define USAGE
 A small toy API for executing code in isolated environments.
 
 Commands:
-	build:   Build docker images.
-	up: 	 Run docker container.
-	dev:     Run both `build` and `up`.
-	test:    Test the code.
+	build:     Build docker images.
+	up: 	   Run docker container.
+	dev:       Run both `build` and `up`.
+	pytest:    Test the code.
+        ssh:       SSH into the web container.
 endef
 
 
@@ -26,3 +27,6 @@ dev:
 
 pytest:
 	docker exec -it cli_api_web_1 pytest $(test_loc)
+
+ssh:
+	docker exec -it cli_api_web_1 /bin/bash

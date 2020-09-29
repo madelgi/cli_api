@@ -118,6 +118,18 @@ version = "0.4.3"
 
 [[package]]
 category = "main"
+description = "croniter provides iteration for datetime object with cron like format"
+name = "croniter"
+optional = false
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+version = "0.3.34"
+
+[package.dependencies]
+natsort = "*"
+python-dateutil = "*"
+
+[[package]]
+category = "main"
 description = "A Python library for the Docker Engine API."
 name = "docker"
 optional = false
@@ -206,6 +218,22 @@ alembic = ">=0.7"
 
 [[package]]
 category = "main"
+description = "A nice way to use Redis in your Flask app"
+name = "flask-redis"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+version = "0.4.0"
+
+[package.dependencies]
+Flask = ">=0.8"
+redis = ">=2.7.6"
+
+[package.extras]
+dev = ["coverage", "pytest", "pytest-mock", "pre-commit"]
+tests = ["coverage", "pytest", "pytest-mock"]
+
+[[package]]
+category = "main"
 description = "Fully featured framework for fast, easy and documented API development with Flask"
 name = "flask-restx"
 optional = false
@@ -224,6 +252,26 @@ werkzeug = "*"
 dev = ["blinker", "Faker (2.0.0)", "mock (3.0.5)", "pytest-benchmark (3.2.2)", "pytest-cov (2.7.1)", "pytest-flask (0.15.1)", "pytest-mock (1.10.4)", "pytest-profiling (1.7.0)", "tzlocal", "invoke (1.3.0)", "readme-renderer (24.0)", "twine (1.15.0)", "tox (3.13.2)", "pytest (4.6.5)", "pytest (5.4.1)", "ossaudit", "black (19.10b0)"]
 doc = ["alabaster (0.7.12)", "Sphinx (2.1.2)", "sphinx-issues (1.2.0)"]
 test = ["blinker", "Faker (2.0.0)", "mock (3.0.5)", "pytest-benchmark (3.2.2)", "pytest-cov (2.7.1)", "pytest-flask (0.15.1)", "pytest-mock (1.10.4)", "pytest-profiling (1.7.0)", "tzlocal", "invoke (1.3.0)", "readme-renderer (24.0)", "twine (1.15.0)", "pytest (4.6.5)", "pytest (5.4.1)", "ossaudit"]
+
+[[package]]
+category = "main"
+description = "A Flask extension for RQ."
+name = "flask-rq2"
+optional = false
+python-versions = "*"
+version = "18.3"
+
+[package.dependencies]
+Flask = ">=0.10"
+redis = ">=3.0.0"
+rq = ">=0.13.0"
+rq-scheduler = ">=0.9.0"
+
+[package.extras]
+all = ["Sphinx (>=1.4)", "pytest", "redis (>3.0.0)", "rq-scheduler (>=0.9.0)", "flask-cli (>=0.4.0)", "pytest (>=2.8.0)", "pytest-cache (>=1.0)", "pytest-flake8 (>=0.5)", "pytest-wholenodeid", "pytest-coverage", "pytest-pythonpath", "Flask-CLI (>=0.4.0)"]
+cli = ["Flask-CLI (>=0.4.0)"]
+docs = ["Sphinx (>=1.4)"]
+tests = ["pytest", "redis (>3.0.0)", "rq-scheduler (>=0.9.0)", "flask-cli (>=0.4.0)", "pytest (>=2.8.0)", "pytest-cache (>=1.0)", "pytest-flake8 (>=0.5)", "pytest-wholenodeid", "pytest-coverage", "pytest-pythonpath"]
 
 [[package]]
 category = "main"
@@ -373,6 +421,18 @@ name = "more-itertools"
 optional = false
 python-versions = ">=3.5"
 version = "8.5.0"
+
+[[package]]
+category = "main"
+description = "Simple yet flexible natural sorting in Python."
+name = "natsort"
+optional = false
+python-versions = ">=3.4"
+version = "7.0.1"
+
+[package.extras]
+fast = ["fastnumbers (>=2.0.0)"]
+icu = ["PyICU (>=1.0.0)"]
 
 [[package]]
 category = "dev"
@@ -604,6 +664,18 @@ redis = ">=3.5.0"
 
 [[package]]
 category = "main"
+description = "Provides job scheduling capabilities to RQ (Redis Queue)"
+name = "rq-scheduler"
+optional = false
+python-versions = "*"
+version = "0.10.0"
+
+[package.dependencies]
+croniter = ">=0.3.9"
+rq = ">=0.13"
+
+[[package]]
+category = "main"
 description = "Python 2 and 3 compatibility utilities"
 name = "six"
 optional = false
@@ -691,7 +763,7 @@ python-versions = "*"
 version = "1.12.1"
 
 [metadata]
-content-hash = "e0741b4762dfe51cec30ab64e886ce7f0c65d8dbc2fe45fd4ebeb4e1e0d6a5d0"
+content-hash = "022fe3c6e443b08fb1808749c08e85ba61da4d02b277ca58f3567bd4cf59a6ff"
 lock-version = "1.0"
 python-versions = "^3.8"
 
@@ -779,6 +851,10 @@ colorama = [
     {file = "colorama-0.4.3-py2.py3-none-any.whl", hash = "sha256:7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff"},
     {file = "colorama-0.4.3.tar.gz", hash = "sha256:e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"},
 ]
+croniter = [
+    {file = "croniter-0.3.34-py2.py3-none-any.whl", hash = "sha256:15597ef0639f8fbab09cbf8c277fa8c65c8b9dbe818c4b2212f95dbc09c6f287"},
+    {file = "croniter-0.3.34.tar.gz", hash = "sha256:7186b9b464f45cf3d3c83a18bc2344cc101d7b9fd35a05f2878437b14967e964"},
+]
 docker = [
     {file = "docker-4.3.1-py2.py3-none-any.whl", hash = "sha256:13966471e8bc23b36bfb3a6fb4ab75043a5ef1dac86516274777576bed3b9828"},
     {file = "docker-4.3.1.tar.gz", hash = "sha256:bad94b8dd001a8a4af19ce4becc17f41b09f228173ffe6a4e0355389eef142f2"},
@@ -803,9 +879,17 @@ flask-migrate = [
     {file = "Flask-Migrate-2.5.3.tar.gz", hash = "sha256:a69d508c2e09d289f6e55a417b3b8c7bfe70e640f53d2d9deb0d056a384f37ee"},
     {file = "Flask_Migrate-2.5.3-py2.py3-none-any.whl", hash = "sha256:4dc4a5cce8cbbb06b8dc963fd86cf8136bd7d875aabe2d840302ea739b243732"},
 ]
+flask-redis = [
+    {file = "flask-redis-0.4.0.tar.gz", hash = "sha256:e1fccc11e7ea35c2a4d68c0b9aa58226a098e45e834d615c7b6c4928b01ddd6c"},
+    {file = "flask_redis-0.4.0-py2.py3-none-any.whl", hash = "sha256:8d79eef4eb1217095edab603acc52f935b983ae4b7655ee7c82c0dfd87315d17"},
+]
 flask-restx = [
     {file = "flask-restx-0.2.0.tar.gz", hash = "sha256:ca87a1808333f4ec5a50a5740b44e6cd3879a4b940d559df3996877ec4a2f2a5"},
     {file = "flask_restx-0.2.0-py2.py3-none-any.whl", hash = "sha256:a1653da19ca0b5e5c2ea59bd5f4639a7749e6a9b882f459de1814ed37872253b"},
+]
+flask-rq2 = [
+    {file = "Flask-RQ2-18.3.tar.gz", hash = "sha256:3ef6395065255447f8e1516ccca24858ba87da1d71a6975e0e3b55256bf04967"},
+    {file = "Flask_RQ2-18.3-py2.py3-none-any.whl", hash = "sha256:abe1e52d3b98abe37e85830a614ba6af864516f1b6cf2229f352f8500eafc5fd"},
 ]
 flask-sqlalchemy = [
     {file = "Flask-SQLAlchemy-2.4.4.tar.gz", hash = "sha256:bfc7150eaf809b1c283879302f04c42791136060c6eeb12c0c6674fb1291fae5"},
@@ -908,6 +992,10 @@ mccabe = [
 more-itertools = [
     {file = "more-itertools-8.5.0.tar.gz", hash = "sha256:6f83822ae94818eae2612063a5101a7311e68ae8002005b5e05f03fd74a86a20"},
     {file = "more_itertools-8.5.0-py3-none-any.whl", hash = "sha256:9b30f12df9393f0d28af9210ff8efe48d10c94f73e5daf886f10c4b0b0b4f03c"},
+]
+natsort = [
+    {file = "natsort-7.0.1-py3-none-any.whl", hash = "sha256:d3fd728a3ceb7c78a59aa8539692a75e37cbfd9b261d4d702e8016639820f90a"},
+    {file = "natsort-7.0.1.tar.gz", hash = "sha256:a633464dc3a22b305df0f27abcb3e83515898aa1fd0ed2f9726c3571a27258cf"},
 ]
 packaging = [
     {file = "packaging-20.4-py2.py3-none-any.whl", hash = "sha256:998416ba6962ae7fbd6596850b80e17859a5753ba17c32284f67bfff33784181"},
@@ -1034,6 +1122,10 @@ requests = [
 rq = [
     {file = "rq-1.5.2-py2.py3-none-any.whl", hash = "sha256:6e32a39d467ffc56fc18f0f0f10abd6aa258895dbac03af31e38fe0c2337aab8"},
     {file = "rq-1.5.2.tar.gz", hash = "sha256:fc23788eedc39cad3c10630af1694a550eba2f8519e57e396fd91b1dba0a7d99"},
+]
+rq-scheduler = [
+    {file = "rq-scheduler-0.10.0.tar.gz", hash = "sha256:de2e2754a05549dadbe7422d2d1fa5ad0c1d556280515af9c3b9c1eba0db5ddb"},
+    {file = "rq_scheduler-0.10.0-py2.py3-none-any.whl", hash = "sha256:f19486671473eba42095163f2ae829d5dcb046dde01628233871ee830c1c3c2e"},
 ]
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},

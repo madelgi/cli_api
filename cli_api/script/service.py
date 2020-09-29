@@ -3,7 +3,7 @@ import typing
 import docker
 
 from cli_api.common.errors import UserException
-from cli_api.extensions import db
+from cli_api.extensions import db, rq
 from .model import Script
 from .interface import ScriptInterface
 
@@ -77,5 +77,22 @@ class ScriptService:
         Execute a given script.
         """
         script = ScriptService.get_script_by_user_and_name(user_id, name, version=version)
-        client = docker.from_env()
-        client.containers.run("alpine", command=script.content, detach=True, remove=True)
+        job = _execute_script.queue(script.content)
+        return {
+            'job_id': job.id,
+            'status': 'submitted'
+        }, 200
+
+
+@rq.job
+def _execute_script(script_content: str):
+    """
+    Helper function that executes a code string in a docker container.
+    """
+    client = docker.from_env()
+    client.containers.run(
+        "alpine",
+        command=script_content,
+        detach=True,
+        mem_limit='10m',
+        remove=True)

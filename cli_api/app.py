@@ -2,8 +2,9 @@ import os
 
 from flask import Flask
 from flask_restx import Api
+from flask_rq2 import RQ
 
-from .extensions import db, bcrypt, migrate
+from .extensions import db, bcrypt, migrate, redis_db, rq
 from .config import config_by_name
 from .common.errors import UserException, ServerException, handle_api_exception
 
@@ -27,6 +28,8 @@ def create_app(config_name: str):
     db.init_app(app)
     bcrypt.init_app(app)
     migrate.init_app(app, db=db)
+    redis_db.init_app(app)
+    rq.init_app(app)
 
     return app
 
