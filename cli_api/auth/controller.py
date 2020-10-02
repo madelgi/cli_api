@@ -2,7 +2,7 @@
 Resources for registering users.
 """
 from flask import request
-from flask_accepts import accepts
+from flask_accepts import accepts, responds
 from flask_restx import Namespace, Resource
 
 from .schema import user_post, user_get
@@ -33,6 +33,9 @@ class RegisterResource(Resource):
 class LoginResource(Resource):
     @accepts(schema=user_post, api=api)
     def post(self):
+        """
+        Log yourself in.
+        """
         auth_token = UserService.login_user(request.parsed_obj)
         response_object = {
             "message": "Successfully logged in",
@@ -45,6 +48,9 @@ class LoginResource(Resource):
 @api.route("/logout")
 class LogoutResource(Resource):
     def post(self):
+        """
+        Log yourself out.
+        """
         auth_token = get_bearer_token()
         UserService.logout_user(auth_token)
         return {"message": "Successfully logged out", "auth_token": auth_token}, 200

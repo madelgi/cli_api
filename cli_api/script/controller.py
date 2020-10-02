@@ -46,10 +46,14 @@ class ScriptResource(Resource):
 
 
 @api.route("/<string:script_name>/execute")
+@api.doc(params={'script_name': 'Name of the script to execute'})
 class ScriptExecuteResource(Resource):
 
     @responds(schema=JobSchema)
     def post(self, script_name: int):
+        """
+        Execute a given script
+        """
         auth_token = get_bearer_token()
         user_id = User.decode_auth_token(auth_token)
         return ScriptService.execute(user_id, script_name)

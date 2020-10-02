@@ -19,7 +19,7 @@ and run the following:
 $ make dev
 ```
 
-You should now be able to access the API at `0.0.0.0:5000`.
+You should now be able to access the API at `http://0.0.0.0:5000`.
 
 
 ## Run tests
@@ -38,3 +38,7 @@ argument:
 $ make pytest test_loc=tests/script/test_controller.py
 ```
 
+
+## Documentation
+
+To get endpoint documentation, launch the environment and navigate to `http://0.0.0.0:5000/`.

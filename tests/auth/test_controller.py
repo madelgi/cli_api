@@ -13,6 +13,7 @@ def test_register_user_success(app):
         assert result.status_code == 201
 
         result_json = result.get_json()
+        print(result_json)
         assert result_json["email"] == "max@gmail.com"
         assert result_json["registered_on"]
 

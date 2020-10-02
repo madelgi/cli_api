@@ -23,23 +23,22 @@ class JobResource(Resource):
 
     @responds(schema=JobSchema(many=True))
     def get(self):
+        """
+        Get information about all jobs.
+        """
         auth_token = get_bearer_token()
         user_id = User.decode_auth_token(auth_token)
         return JobService.get_jobs_by_user_id(user_id)
 
 
 @api.route("/<string:job_id>")
+@api.doc(params={'job_id': 'A job ID'})
 class JobIdResource(Resource):
 
     @responds(schema=JobSchema)
     def get(self, job_id: str):
         """
-        Get details for given job_id.
-
-        :param job_id: The job ID to look up.
-
-        :todo: Right now, we have no restrictions on who can look up a job ID. Should confirm
-            the user ID is valid for the given job.
+        Get information about the given job ID.
         """
         auth_token = get_bearer_token()
         user_id = User.decode_auth_token(auth_token)

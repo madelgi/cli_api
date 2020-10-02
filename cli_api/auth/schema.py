@@ -1,13 +1,15 @@
-from marshmallow import Schema
+from marshmallow import Schema, fields
 
 
 class UserSchema(Schema):
     """
     Schema for user object.
     """
-
-    class Meta:
-        fields = ("email", "registered_on", "admin", "password", "id")
+    email = fields.String(attribute="email")
+    registered_on = fields.DateTime(attribute="registered_on")
+    admin = fields.Boolean(attribute="admin")
+    password = fields.String(attribute="password")
+    id = fields.Integer(attribute="id")
 
 
 user_post = UserSchema(only=["email", "password"])
