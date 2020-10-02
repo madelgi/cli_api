@@ -1,11 +1,11 @@
 import typing
 
-import docker
 
 from cli_api.common.errors import UserException
-from cli_api.extensions import db, rq
+from cli_api.extensions import db
 from .model import Script
 from .interface import ScriptInterface
+from cli_api.jobs.service import JobRedisService, JobService
 
 
 class ScriptService:
@@ -68,31 +68,27 @@ class ScriptService:
 
         db.session.add(new_script)
         db.session.commit()
-
         return new_script
 
     @staticmethod
-    def execute(user_id: int, name: str, version: int = None):
+    def execute(
+            user_id: int,
+            name: str,
+            version: int = None,
+            description: str = None):
         """
         Execute a given script.
         """
+        # Get script
         script = ScriptService.get_script_by_user_and_name(user_id, name, version=version)
-        job = _execute_script.queue(script.content)
-        return {
-            'job_id': job.id,
-            'status': 'submitted'
-        }, 200
 
+        # Submit job
+        job_id = JobRedisService.submit_job(script.content)
 
-@rq.job
-def _execute_script(script_content: str):
-    """
-    Helper function that executes a code string in a docker container.
-    """
-    client = docker.from_env()
-    client.containers.run(
-        "alpine",
-        command=script_content,
-        detach=True,
-        mem_limit='10m',
-        remove=True)
+        # Create job entry in database
+        job = JobService.create_job(job_id, user_id, name, description)
+
+        # When job is completed, update job entry
+        JobRedisService.commit_job_result(job_id)
+
+        return job

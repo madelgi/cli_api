@@ -10,15 +10,16 @@ def test_user_create(db):
 
 
 def test_encode_auth_token(db):
-    user = User("max@gmail.com", "pass123", admin=True)
+    user = User("max1@gmail.com", "pass123", admin=True)
     db.session.add(user)
     db.session.commit()
+
     auth_token = user.encode_auth_token(user.id)
     assert isinstance(auth_token, bytes)
 
 
 def test_decode_auth_token(db):
-    user = User("max@gmail.com", "pass123", admin=True)
+    user = User("max2@gmail.com", "pass123", admin=True)
     db.session.add(user)
     db.session.commit()
     auth_token = user.encode_auth_token(user.id)

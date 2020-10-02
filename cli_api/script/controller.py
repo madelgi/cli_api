@@ -7,6 +7,7 @@ from flask_accepts import accepts, responds
 
 from .schema import script_post, script_get
 from .service import ScriptService
+from cli_api.jobs.schema import JobSchema
 from cli_api.auth.model import User
 from cli_api.common.utils import get_bearer_token
 
@@ -46,6 +47,8 @@ class ScriptResource(Resource):
 
 @api.route("/<string:script_name>/execute")
 class ScriptExecuteResource(Resource):
+
+    @responds(schema=JobSchema)
     def post(self, script_name: int):
         auth_token = get_bearer_token()
         user_id = User.decode_auth_token(auth_token)

@@ -37,10 +37,12 @@ def create_app(config_name: str):
 def register_routes(app):
     from .script.controller import api as script_api
     from .auth.controller import api as auth_api
+    from .jobs.controller import api as jobs_api
 
     api = Api(app, title="CLI API", version="0.1.0")
     api.add_namespace(script_api)
     api.add_namespace(auth_api)
+    api.add_namespace(jobs_api)
 
 
 def register_commands(app: Flask):

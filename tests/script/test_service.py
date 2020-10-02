@@ -62,3 +62,12 @@ def test_create(db: SQLAlchemy):
     assert results[0].version == 1
     assert results[1].version == 2
 
+
+def test_execute(db: SQLAlchemy):
+    obj1 = dict(
+        name="echo_hello",
+        user=1,
+        content='sleep 30;'
+    )
+
+
