@@ -75,7 +75,8 @@ class ScriptService:
             user_id: int,
             name: str,
             version: int = None,
-            description: str = None):
+            description: str = None,
+            placeholder_dict: str = None):
         """
         Execute a given script.
         """
@@ -83,10 +84,12 @@ class ScriptService:
         script = ScriptService.get_script_by_user_and_name(user_id, name, version=version)
 
         # Submit job
-        job_id = JobRedisService.submit_job(script.content)
+        job_id = JobRedisService.submit_job(script.content, placeholder_dict)
 
         # Create job entry in database
-        job = JobService.create_job(job_id, user_id, name, description)
+        job = JobService.create_job(
+            {'id': job_id, 'user_id': user_id, 'name': name, 'description': description}
+        )
 
         # When job is completed, update job entry
         JobRedisService.commit_job_result(job_id)

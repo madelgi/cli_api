@@ -1,6 +1,5 @@
 import pytest
 
-from cli_api.auth.service import UserService
 from cli_api.app import create_app
 
 
@@ -20,9 +19,6 @@ def db(app):
 
     with app.app_context():
         db.create_all()
-        # Add one user
-        UserService.register_user({'email': 'max@gmail.com', 'password': 'xyz', 'admin': True})
-        UserService.register_user({'email': 'jane@yahoo.com', 'password': 'abc', 'admin': False})
         yield db
         db.drop_all()
-        db.session.commit()
+        db.session.commit()  # pylint: disable=E1101

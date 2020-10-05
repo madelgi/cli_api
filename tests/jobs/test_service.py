@@ -1,3 +1,5 @@
+from unittest.mock import MagicMock
+
 from flask_sqlalchemy import SQLAlchemy
 
 from cli_api.jobs.model import Job
@@ -53,3 +55,31 @@ def test_write_job_results_to_db(db: SQLAlchemy):
 
     job = JobService.get_job_by_id('job_1')
     assert job.results == 'HELLO\n'
+
+
+def test_redis_submit_job_no_placeholder(monkeypatch):
+    # No placeholder
+    queue_execution = MagicMock()
+    monkeypatch.setattr("cli_api.jobs.service._execute_script.queue", queue_execution)
+
+    JobRedisService.submit_job("echo \"HELLO WORLD\"")
+    queue_execution.assert_called_with("echo \"HELLO WORLD\"")
+
+
+def test_redis_submit_job_placeholder_default(monkeypatch):
+    queue_execution = MagicMock()
+    monkeypatch.setattr("cli_api.jobs.service._execute_script.queue", queue_execution)
+
+    JobRedisService.submit_job("echo {{PLACEHOLDER:\"default text\"}} | wc -w")
+    queue_execution.assert_called_with("echo \"default text\" | wc -w")
+
+
+def test_redis_submit_job_placeholder(monkeypatch):
+    queue_execution = MagicMock()
+    monkeypatch.setattr("cli_api.jobs.service._execute_script.queue", queue_execution)
+
+    JobRedisService.submit_job(
+        "echo {{PLACEHOLDER:\"default text\"}} | wc -w",
+        variable_dict={"PLACEHOLDER": "\"replacement text\""}
+    )
+    queue_execution.assert_called_with("echo \"replacement text\" | wc -w")

@@ -1,5 +1,7 @@
+import datetime
 from unittest.mock import patch
 
+from cli_api.jobs.model import Job
 from cli_api.script.model import Script
 from cli_api.auth.model import User
 from cli_api.script.service import ScriptService
@@ -31,3 +33,27 @@ def test_create_script_success(script_create, app):
 
         assert res.status_code == 201
         assert res.get_json()["user"] == 1
+
+
+@patch.object(User, "decode_auth_token", lambda _: 1)
+@patch("cli_api.script.service.ScriptService.execute")
+def test_execute_script(script_execute, app):
+    with app.test_client() as client:
+        payload = {"VAR1": "val1", "VAR2": "val2"}
+        headers = {"Authorization": "Bearer abc123"}
+        job_json = {
+            'id': '1',
+            'name': 'job',
+            'submit_time': None,
+            'complete_time': None,
+            'description': None,
+            'user_id': 1,
+            'complete': False,
+            'results': None
+        }
+
+        script_execute.return_value = Job(**job_json)
+        res = client.post("/scripts/test_script/execute", json=payload, headers=headers)
+
+        assert res.get_json() == job_json
+        assert script_execute.called_with(1, 'test_script', payload)

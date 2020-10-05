@@ -1,4 +1,5 @@
 import datetime
+import re
 import typing
 
 import docker
@@ -58,12 +59,19 @@ class JobRedisService:
     Utilities for interacting with the redis job queue.
     """
     @staticmethod
-    def submit_job(script_content: str):
+    def submit_job(script_content: str, variable_dict: dict = None):
+        """
+        Submit a job to the queue.
+        """
+        script_content = _handle_placeholders(script_content, variable_dict)
         job = _execute_script.queue(script_content)
         return job.id
 
     @staticmethod
     def commit_job_result(job_id: str):
+        """
+        Commit RQ job result to database.
+        """
         _update_job_db.queue(depends_on=job_id, at_front=True)
 
 
@@ -96,3 +104,33 @@ def _update_job_db():
     app = create_app('prod')
     with app.app_context():
         JobService.write_job_results_to_db(parent_job.id, parent_job.result.decode("utf-8"))
+
+
+def _handle_placeholders(script_content: str, variable_dict: dict = None) -> str:
+    """
+    Helper method for replacing placeholders with values.
+    """
+    if not variable_dict:
+        variable_dict = {}
+
+    placeholders = re.findall(r"{{(.*)}}", script_content)
+    placeholder_dict = {}
+
+    # Build up placeholders/defaults
+    for placeholder in placeholders:
+        p = placeholder.split(":")
+        var = p.pop(0)
+        default = ":".join(p) if p else None
+        placeholder_dict[var] = default
+
+    for placeholder, default in placeholder_dict.items():
+        if placeholder in variable_dict:
+            value = variable_dict[placeholder]
+        elif default:
+            value = default
+        else:
+            raise UserException(f"No value provided for placeholder '{placeholder}'", 400)
+
+        script_content = re.sub(rf"{{{{{placeholder}.*}}}}", value, script_content)
+
+    return script_content
