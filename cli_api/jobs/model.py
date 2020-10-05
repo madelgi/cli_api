@@ -20,9 +20,10 @@ class Job(db.Model):
     :todo: Rather than `complete`, have a `status` field that indicates the job status (e.g., 'submitted', 'running',
         'succeeded', 'failed')
     """
+
     id = Column(String(36), primary_key=True)
     name = Column(String(128), index=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
+    user_id = Column(Integer, ForeignKey("users.id"))
     description = Column(String(512), index=True)
 
     submit_time = Column(DateTime, default=datetime.datetime.utcnow)

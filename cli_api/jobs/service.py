@@ -16,6 +16,7 @@ class JobService:
     """
     Utilities for interacting with the Job table.
     """
+
     @staticmethod
     def get_job_by_id(job_id: str, user_id: int = None) -> Job:
         job = Job.query.filter_by(id=job_id).first()
@@ -31,10 +32,10 @@ class JobService:
     @staticmethod
     def create_job(job: JobInterface) -> Job:
         new_job = Job(
-            id=job['id'],
-            user_id=job['user_id'],
-            name=job.get('name'),
-            description=job.get('description')
+            id=job["id"],
+            user_id=job["user_id"],
+            name=job.get("name"),
+            description=job.get("description"),
         )
         db.session.add(new_job)
         db.session.commit()
@@ -58,6 +59,7 @@ class JobRedisService:
     """
     Utilities for interacting with the redis job queue.
     """
+
     @staticmethod
     def submit_job(script_content: str, variable_dict: dict = None):
         """
@@ -85,10 +87,8 @@ def _execute_script(script_content: str):
     """
     client = docker.from_env()
     return client.containers.run(
-        "alpine",
-        command=script_content,
-        mem_limit='10m',
-        remove=True)
+        "alpine", command=script_content, mem_limit="10m", remove=True
+    )
 
 
 @rq.job
@@ -101,9 +101,11 @@ def _update_job_db():
         else we may run into issues with TTL.
     """
     parent_job = get_current_job().dependency
-    app = create_app('prod')
+    app = create_app("prod")
     with app.app_context():
-        JobService.write_job_results_to_db(parent_job.id, parent_job.result.decode("utf-8"))
+        JobService.write_job_results_to_db(
+            parent_job.id, parent_job.result.decode("utf-8")
+        )
 
 
 def _handle_placeholders(script_content: str, variable_dict: dict = None) -> str:
@@ -129,7 +131,9 @@ def _handle_placeholders(script_content: str, variable_dict: dict = None) -> str
         elif default:
             value = default
         else:
-            raise UserException(f"No value provided for placeholder '{placeholder}'", 400)
+            raise UserException(
+                f"No value provided for placeholder '{placeholder}'", 400
+            )
 
         script_content = re.sub(rf"{{{{{placeholder}.*}}}}", value, script_content)
 

@@ -5,6 +5,7 @@ class UserSchema(Schema):
     """
     Schema for user object.
     """
+
     email = fields.String(attribute="email")
     registered_on = fields.DateTime(attribute="registered_on")
     admin = fields.Boolean(attribute="admin")

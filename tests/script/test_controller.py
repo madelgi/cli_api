@@ -42,18 +42,18 @@ def test_execute_script(script_execute, app):
         payload = {"VAR1": "val1", "VAR2": "val2"}
         headers = {"Authorization": "Bearer abc123"}
         job_json = {
-            'id': '1',
-            'name': 'job',
-            'submit_time': None,
-            'complete_time': None,
-            'description': None,
-            'user_id': 1,
-            'complete': False,
-            'results': None
+            "id": "1",
+            "name": "job",
+            "submit_time": None,
+            "complete_time": None,
+            "description": None,
+            "user_id": 1,
+            "complete": False,
+            "results": None,
         }
 
         script_execute.return_value = Job(**job_json)
         res = client.post("/scripts/test_script/execute", json=payload, headers=headers)
 
         assert res.get_json() == job_json
-        assert script_execute.called_with(1, 'test_script', payload)
+        assert script_execute.called_with(1, "test_script", payload)

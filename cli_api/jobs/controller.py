@@ -12,15 +12,12 @@ from .service import JobService
 
 
 api = Namespace(
-    "Jobs",
-    description="Endpoint for fetching job status and results",
-    path="/jobs"
+    "Jobs", description="Endpoint for fetching job status and results", path="/jobs"
 )
 
 
 @api.route("")
 class JobResource(Resource):
-
     @responds(schema=JobSchema(many=True))
     def get(self):
         """
@@ -32,9 +29,8 @@ class JobResource(Resource):
 
 
 @api.route("/<string:job_id>")
-@api.doc(params={'job_id': 'A job ID'})
+@api.doc(params={"job_id": "A job ID"})
 class JobIdResource(Resource):
-
     @responds(schema=JobSchema)
     def get(self, job_id: str):
         """

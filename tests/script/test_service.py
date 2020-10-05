@@ -78,16 +78,25 @@ def test_execute(monkeypatch, db: SQLAlchemy):
         user=1,
         content='echo "HELLO"',
     )
-    placeholder_dict = {'var1': 'val1', 'var2': 'val2'}
+    placeholder_dict = {"var1": "val1", "var2": "val2"}
     ScriptService.create(obj1)
 
     ScriptService.execute(
-        1, 'echo_hello', version=1, description="Running echo_hello!", placeholder_dict=placeholder_dict
+        1,
+        "echo_hello",
+        version=1,
+        description="Running echo_hello!",
+        placeholder_dict=placeholder_dict,
     )
 
     # Confirm correct communication with redis/job service
-    redis_service.submit_job.assert_called_with("echo \"HELLO\"", placeholder_dict)
+    redis_service.submit_job.assert_called_with('echo "HELLO"', placeholder_dict)
     redis_service.commit_job_result.assert_called_with(1)
     job_service.create_job.assert_called_with(
-        {'id': 1, 'user_id': 1, 'name': 'echo_hello', 'description': 'Running echo_hello!'}
+        {
+            "id": 1,
+            "user_id": 1,
+            "name": "echo_hello",
+            "description": "Running echo_hello!",
+        }
     )
