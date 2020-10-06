@@ -1,6 +1,13 @@
 # CLI API
 
 
+<p align="center">
+<a href="https://codecov.io/gh/madelgi/cli_api">
+    <img src="https://codecov.io/gh/madelgi/cli_api/branch/master/graph/badge.svg?token=WJHR2JOE53"/>
+</a>
+</p>
+
+
 A small API for executing arbitrary scripts in the cloud.
 
 
