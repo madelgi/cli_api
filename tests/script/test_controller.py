@@ -87,7 +87,7 @@ def test_execute_script(script_execute, app):
         }
 
         script_execute.return_value = Job(**job_json)
-        res = client.post("/script/test_script/execute", json=payload, headers=headers)
+        res = client.post("/script/test_script", json=payload, headers=headers)
 
         assert res.get_json() == job_json
         assert script_execute.called_with(1, "test_script", payload)

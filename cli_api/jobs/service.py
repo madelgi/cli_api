@@ -3,8 +3,7 @@ import re
 import typing
 
 import docker
-from rq import get_current_job,
-import rq.job as rq_job
+from rq import get_current_job
 
 from .interface import JobInterface
 from .model import Job
@@ -80,7 +79,7 @@ class JobRedisService:
     @staticmethod
     def cancel_job(job_id: str):
         """
-        Remove a job from the queue
+        Remove a job from the queue.
         """
         job = rq_job.Job.fetch(job_id)
         if job.is_started:

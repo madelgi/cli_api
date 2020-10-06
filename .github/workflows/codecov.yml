@@ -1,0 +1,27 @@
+on:
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
+    schedule:
+        - cron: '0 9 * * 1'
+
+jobs:
+    run_codecov:
+        name: Run codecov
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@master
+
+            - name: Run tests and generate coverage report
+              run: |
+                mv .env.sample .env
+                make dev-detached
+                make pytest-cov
+
+            - name: Run codecov action
+              uses: codecov/codecov-action@v1
+              with:
+                  file: ./cov.xml
