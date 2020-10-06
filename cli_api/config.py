@@ -42,6 +42,7 @@ class DevelopmentConfig(Config):
 class TestConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///cli_api.db"
+    RQ_CONNECTION_CLASS = 'fakeredis.FakeStrictRedis'
 
 
 config_by_name = dict(

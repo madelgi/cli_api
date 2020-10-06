@@ -73,3 +73,5 @@ def test_redis_submit_job_placeholder(monkeypatch):
         variable_dict={"PLACEHOLDER": '"replacement text"'},
     )
     queue_execution.assert_called_with('echo "replacement text" | wc -w')
+
+

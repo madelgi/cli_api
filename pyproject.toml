@@ -24,6 +24,7 @@ redis = "^3.5.3"
 rq = "^1.5.2"
 flask-redis = "^0.4.0"
 Flask-RQ2 = "^18.3"
+fakeredis = "^1.4.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

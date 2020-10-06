@@ -3,7 +3,8 @@ import re
 import typing
 
 import docker
-from rq import get_current_job
+from rq import get_current_job,
+import rq.job as rq_job
 
 from .interface import JobInterface
 from .model import Job
@@ -17,7 +18,6 @@ class JobService:
     """
     Utilities for interacting with the Job table.
     """
-
     @staticmethod
     def get_job_by_id(job_id: str, user_id: int = None) -> Job:
         job = Job.query.filter_by(id=job_id).first()
@@ -76,6 +76,17 @@ class JobRedisService:
         Commit RQ job result to database.
         """
         _update_job_db.queue(depends_on=job_id, at_front=True)
+
+    @staticmethod
+    def cancel_job(job_id: str):
+        """
+        Remove a job from the queue
+        """
+        job = rq_job.Job.fetch(job_id)
+        if job.is_started:
+            raise UserException("Job already running, cannot cancel now.", status_code=403)
+        else:
+            job.cancel()
 
 
 ####################################################################################################

@@ -10,6 +10,7 @@ from .service import ScriptService
 from cli_api.jobs.schema import JobSchema
 from cli_api.auth.model import User
 from cli_api.common.utils import get_bearer_token
+from cli_api.common.errors import UserException
 
 
 api = Namespace(
@@ -54,12 +55,8 @@ class ScriptGetResource(Resource):
         user_id = User.decode_auth_token(auth_token)
         return ScriptService.get_script_by_user_and_name(user_id, script_name, version=request.args.get("version"))
 
-
-@api.route("/<string:script_name>/execute")
-@api.doc(params={"script_name": "Name of the script to execute"})
-class ScriptExecuteResource(Resource):
     @responds(schema=JobSchema, api=api)
-    def post(self, script_name: int):
+    def post(self, script_name: str):
         """
         Execute a given script. Accepts an arbitrary JSON object
         """
@@ -68,3 +65,16 @@ class ScriptExecuteResource(Resource):
         return ScriptService.execute(
             user_id, script_name, placeholder_dict=request.get_json()
         )
+
+    def delete(self, script_name: str):
+        """
+        Delete the script.
+        """
+        version = request.args.get("version")
+        delete_all = request.args.get("delete_all")
+        if (version is not None) and (delete_all is not None):
+            raise UserException("Please specify only one of `version` or `delete_all`.", 400)
+
+        auth_token = get_bearer_token()
+        user_id = User.decode_auth_token(auth_token)
+        return ScriptService.delete(user_id, script_name, version=version, delete_all=delete_all)

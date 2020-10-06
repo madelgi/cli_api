@@ -101,3 +101,23 @@ class ScriptService:
         JobRedisService.commit_job_result(job_id)
 
         return job
+
+    @staticmethod
+    def delete(user_id: int, name: str, version: int = None, delete_all: bool = False):
+        """
+        Delete a script
+
+        :param user_id: The associated user id.
+        :param name: The script name.
+        :param version: The script version to delete.
+        :param delete_all: Boolean, if true, delete all versions of a script.
+        :returns:
+        """
+        if not delete_all:
+            scripts = ScriptService.get_script_by_user_and_name(user_id, name, version=version)
+            db.session.delete(scripts)
+        else:
+            scripts = Script.query.filter_by(user=user_id, name=name).delete()
+
+        db.session.commit()
+        return scripts
