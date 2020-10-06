@@ -15,7 +15,7 @@ from cli_api.common.utils import get_bearer_token
 api = Namespace(
     "Script",
     description="Endpoint for adding, modifying, deleting various scripts",
-    path="/scripts",
+    path="/script",
 )
 
 
@@ -43,6 +43,16 @@ class ScriptResource(Resource):
         script_obj["user"] = user_id
 
         return ScriptService.create(script_obj)
+
+
+@api.route("/<string:script_name>")
+@api.doc(params={"script_name": "Name of the script to look up"})
+class ScriptGetResource(Resource):
+    @responds(schema=script_get, api=api)
+    def get(self, script_name: str):
+        auth_token = get_bearer_token()
+        user_id = User.decode_auth_token(auth_token)
+        return ScriptService.get_script_by_user_and_name(user_id, script_name, version=request.args.get("version"))
 
 
 @api.route("/<string:script_name>/execute")
